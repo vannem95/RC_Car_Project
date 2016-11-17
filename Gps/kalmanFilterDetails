@@ -1,0 +1,29 @@
+data.transition_matrix,
+data.observation_matrix,
+data.initial_transition_covariance,
+data.initial_observation_covariance,
+data.transition_offsets,
+data.observation_offset,
+data.initial_state_mean,
+data.initial_state_covariance,	
+data.states
+data.observations
+
+
+
+	transition_matrix=A,                      5x5
+	observation_matrix=C,                     2x5
+		initial_transition_covariance=Q_0,    (10*eye(5)) 
+		initial_observation_covariance=R_0,   (10*eye(2))
+transition_offsets=b,                     3x6
+observation_offset=d,                     2x1
+	initial_state_mean=x_0,              5x1 of zeros
+	initial_state_covariance=V_0,            eye(5)
+	observations=Z,                          333x3
+states=X,                                 5x6?
+         
+
+        
+
+
+
