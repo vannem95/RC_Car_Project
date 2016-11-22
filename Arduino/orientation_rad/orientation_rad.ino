@@ -14,7 +14,7 @@ Adafruit_Simple_AHRS          ahrs(&accel, &mag);
 void setup()
 {
   Serial.begin(57600);
-  Serial.println(F("Adafruit 10 DOF Board AHRS Example")); Serial.println("");
+  Serial.println("Adafruit 10 DOF Board AHRS Example"); 
   accel.begin();
   mag.begin();
 }
@@ -25,13 +25,13 @@ void loop(void)
 
   if (ahrs.getOrientation(&orientation))
   {
-    Serial.print(F("Orientation: "));
+    Serial.print("Orientation: ");
     Serial.print(orientation.roll*3.14/180);
-    Serial.print(F(" "));
+    Serial.print(" ");
     Serial.print(orientation.pitch*3.14/180);
-    Serial.print(F(" "));
+    Serial.print(" ");
     Serial.print(orientation.heading*3.14/180);
-    Serial.println(F(""));
+    Serial.println("");
   }
   delay(100);
 }

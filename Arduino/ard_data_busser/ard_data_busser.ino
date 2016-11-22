@@ -1,6 +1,6 @@
 #include <Servo.h> 
+//------------------------------------------------------
 
-// ....................................................
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_HMC5883_U.h>
@@ -11,8 +11,10 @@ Adafruit_ADXL345_Unified accel(11111);
 Adafruit_HMC5883_Unified mag(22222);
 
 Adafruit_Simple_AHRS          ahrs(&accel, &mag);
-// ....................................................
+int sensorcounter=0;
+const int SENSOR_FREQUENCY=20;
 
+//------------------------------------------------------
 char throttle_as_string[4];                                  // defining constants and variables
 char steering_as_string[4];
 
@@ -23,8 +25,6 @@ const int END=4;
 const int TIMEOUT=0;
 
 int counter=0;
-// ....................................................
-int sensorcounter=0;
 //int character_number=0;
 unsigned char single_character; 
 
@@ -34,14 +34,10 @@ int reciever_channel_5;
 
 long int current_time=0;                                                              // timer
 long int last_time_command_character=0;
-const long int timeout_command_character=5000;                                   // character timeout set to 5000ms
+const long int timeout_command_character=500;                                   // character timeout set to 500ms
 
 long int last_time_command=0;
 const long int timeout_command=3000;                                            // command timeout set to 3000ms
-
-// ....................................................
-const int SENSOR_FREQUENCY=20;
-// ....................................................
 
 const int THROTTLE_DEFAULT=90;
 const int STEERING_DEFAULT=90;
@@ -93,30 +89,27 @@ void setup() {
   throttle_servo.attach(THROTTLE_PIN);
   steering_servo.attach(STEERING_PIN);
   write_commands(throttle,steering);
-// ....................................................
-
+//------------------------------------------------------
   accel.begin();
   mag.begin();
-// ....................................................
-
+//------------------------------------------------------
 }
 
 void loop()
 {
-// ....................................................
-
+//------------------------------------------------------
+  sensorcounter=sensorcounter+1;
   sensors_vec_t   orientation;
-  if (ahrs.getOrientation(&orientation) & 0==counter%SENSOR_FREQUENCY)
+  if (ahrs.getOrientation(&orientation) && 0==sensorcounter%SENSOR_FREQUENCY)
   {
     float roll=float(orientation.roll);
     float pitch=float(orientation.pitch);
     float heading=float(orientation.heading);
     char str[150];
-    sprintf(str, "r:%d.%02d p:%d.%02d h:%d.%02d \n", (int)roll, (int)(signcheck(roll)*100)%100 , (int)pitch, (int)(signcheck(pitch)*100)%100, (int)heading, (int)(signcheck(heading)*100)%100) ;
+    sprintf(str, "r:%d.%02d p:%d.%02d h:%d.%02d \n",  (int)roll,(int)(signcheck(roll)*100)%100,(int)pitch,(int)(signcheck(pitch)*100)%100,(int)heading,(int)(signcheck(heading)*100)%100) ;
     Serial.write(str);
   }
-
-// ....................................................
+//------------------------------------------------------
 
   if (input[1]>900 & input[1]<1050)                                             // checking interrupt value of the switch(transmitter channel#5)
   {
@@ -199,7 +192,7 @@ void loop()
                 steering=char2num(steering_as_string);
                 last_throttle=throttle;
                 last_steering=steering;
-                last_time_command=current_time;
+                last_time_command=current_time;    
               }
             }
             break;                                       
@@ -217,19 +210,7 @@ void write_commands(int throttle_command,int steering_command){                 
   throttle_servo.write(throttle_command);
   steering_servo.write(steering_command);
 }
-// ....................................................
 
-//function to extract decimal part of float
-long getDecimal(float val)
-{
-  int intPart = int(val);
-  long decPart = 1000*(val-intPart); //I am multiplying by 1000 assuming that the foat values will have a maximum of 3 decimal places. 
-                                    //Change to match the number of decimal places you need
-  if(decPart>0)return(decPart);           //return the decimal part of float number if it is available 
-  else if(decPart<0)return((-1)*decPart); //if negative, multiply by -1
-  else if(decPart=0)return(00);           //return 0 if decimal part of float number is not available
-}
-// ....................................................
 
 ISR(PCINT0_vect) {                                                                     // Pulse width measurement using interrupt
   timer[0] = micros();
@@ -243,8 +224,6 @@ ISR(PCINT0_vect) {                                                              
     input[1] = timer[0] - timer[2];
   }
 }
-// ....................................................
-
 float signcheck(float x){
   float result;
   if (0>x){
@@ -255,5 +234,4 @@ float signcheck(float x){
   }
   return result;
 }
-// ....................................................
 

@@ -225,4 +225,3 @@ void write_commands(int throttle_command,int steering_command){
   steering_servo.write(steering_command);
 }
 
-
