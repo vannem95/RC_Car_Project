@@ -14,7 +14,8 @@ try:
 except serial.SerialException:
 	print('Serial port(Arduino) error')
 try:
-	serial_gps=serial.Serial('/dev/ttyAMA0',9600,timeout=0.01)
+	serial_gps=serial.Serial('/dev/ttyAMA0',57600,timeout=0.01)
+	#serial_gps.open()
 except serial.SerialException:
 	print('Serial port(Gps) error')
 try:
@@ -31,3 +32,4 @@ except KeyboardInterrupt:
 	print('Closing..')
 	serial_arduino.close()
 	serial_device.close()
+	serial_gps.close()
