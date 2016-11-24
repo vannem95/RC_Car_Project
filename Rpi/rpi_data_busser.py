@@ -8,21 +8,20 @@ try:
 	serial_device=serial.Serial('/dev/ttyUSB0',57600, timeout=0.1)
 except serial.SerialException:
 	print('Serial port(Telemetry) error')
-
+try:
+	serial_gps=serial.Serial('/dev/ttyAMA0',9600,timeout=0.01)
+except serial.SerialException:
+	print('Serial port(Gps) error')
 try:
 	serial_arduino=serial.Serial('/dev/ttyACM0',57600,timeout=0.01)
 except serial.SerialException:
 	print('Serial port(Arduino) error')
-try:
-	serial_gps=serial.Serial('/dev/ttyAMA0',57600,timeout=0.01)
-	#serial_gps.open()
-except serial.SerialException:
-	print('Serial port(Gps) error')
+
 try:
 	while (1):
 		imudata = serial_arduino.readline()
 		orientation.write(imudata)
-		gpsdata = serial_gps.readline()
+		gpsdata = serial_gps.read()
 		gps.write(gpsdata)
 		telemetrydata=serial_device.read()
                 if 1==DEBUG :
